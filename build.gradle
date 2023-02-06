@@ -1,0 +1,38 @@
+import io.github.notstirred.nofail_AT_ideaSyncTask.TestTransform
+
+plugins {
+    id 'java'
+}
+
+group 'io.github.notstirred'
+version '1.0-SNAPSHOT'
+
+dependencies {
+    implementation(project(":Subproject"))
+}
+
+def artifactType = Attribute.of('artifactType', String)
+def transformed = Attribute.of('transformed', Boolean)
+dependencies {
+    attributesSchema {
+        attribute(transformed)
+    }
+    artifactTypes.getByName("jar") {
+        attributes.attribute(transformed, false)
+    }
+}
+
+configurations.all {
+    afterEvaluate {
+        if (canBeResolved) {
+            attributes.attribute(transformed, true)
+        }
+    }
+}
+
+dependencies {
+    registerTransform(TestTransform) {
+        from.attribute(transformed, false).attribute(artifactType, "jar")
+        to.attribute(transformed, true).attribute(artifactType, "jar")
+    }
+}

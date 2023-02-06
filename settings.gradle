@@ -1,0 +1,3 @@
+rootProject.name = 'nofail_AT_ideaSyncTask'
+include 'Subproject'
+
